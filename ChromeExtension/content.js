@@ -15,8 +15,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         for (let i = 0; i < iframes.length; i++) {
             const iframe = iframes[i];
             
-            // 找到目标 iframe
-            if (iframe.src && iframe.src.includes('192.168.50.5:55566')) {
+            // 找到目标 iframe (这里填写你播放器的 URL，例如 Player/netmusic.html)
+            if (iframe.src && iframe.src.includes('YOUR_PLAYER_URL')) {
                 console.log("🎯 向播放器转发指令:", message.action);
                 
                 // 转发给 iframe

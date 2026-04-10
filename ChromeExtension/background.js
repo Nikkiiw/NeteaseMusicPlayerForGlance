@@ -22,7 +22,7 @@ function startMonitoring() {
                 // 只有 audible 为 true 的标签页才有声音
                 if (tab.audible) {
                     // 判断是否是网易云页面 (根据你的实际地址调整)
-                    const isNeteasePage = tab.url && tab.url.includes('192.168.50.5:10001');
+                    const isNeteasePage = tab.url && tab.url.includes('YOUR_GLANCE_URL');
                     
                     // 如果有声音 且 不是网易云 -> 标记为发现外部声音
                     if (!isNeteasePage) {
