@@ -82,6 +82,8 @@ class NeteaseMiniPlayer {
         const autoPauseAttr = element.getAttribute('data-auto-pause') ?? element.dataset.autoPause;
         const autoPauseDisabled = autoPauseAttr === 'true' || autoPauseAttr === true;
 
+        const apiUrl = element.getAttribute('data-api-url') || element.dataset.apiUrl || 'YOUR_API_URL';
+
         return {
             embed: isEmbed,
             autoplay: element.dataset.autoplay === 'true',
@@ -92,7 +94,8 @@ class NeteaseMiniPlayer {
             theme: element.dataset.theme || 'auto',
             size: element.dataset.size || 'compact',
             defaultMinimized: defaultMinimized,
-            autoPauseDisabled: autoPauseDisabled
+            autoPauseDisabled: autoPauseDisabled,
+            apiUrl: apiUrl
         };
     }
     async init() {
@@ -510,7 +513,7 @@ class NeteaseMiniPlayer {
         this.updateVolumeDisplay();
     }
     async apiRequest(endpoint, params = {}) {
-        const baseUrl = 'YOUR_API_URL';
+        const baseUrl = this.config.apiUrl;
         const queryString = new URLSearchParams(params).toString();
         const url = `${baseUrl}${endpoint}${queryString ? '?' + queryString : ''}`;
         try {

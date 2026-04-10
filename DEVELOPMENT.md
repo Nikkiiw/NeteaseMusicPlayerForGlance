@@ -4,19 +4,20 @@ This document explains the internal logic and file structure of the NetEase Musi
 
 ## 📁 File Structure
 
-| File | Description |
-| :--- | :--- |
-| `add_songs.py` | Adds songs from `song_ids.txt` to the playlist specified in `playlist_id.txt`. |
-| `creat_list.py` | Creates a new playlist named "daily" and saves its ID to `playlist_id.txt`. |
-| `del_list.py` | Deletes the playlist ID stored in `playlist_id.txt`. |
-| `song_ids.py` | Fetches daily recommendation songs and saves their IDs to `song_ids.txt`. |
-| `api.txt` | Configuration: Base URL of the NetEase Cloud Music API. |
-| `cookie.txt` | Configuration: `MUSIC_U` cookie for authentication. |
-| `playlist_id.txt` | State: Stores the currently active playlist ID. |
-| `song_ids.txt` | State: Stores the list of song IDs to be added. |
-| `netmusic.html` | The web interface for the player. |
+| File | Location | Description |
+| :--- | :--- | :--- |
+| `add_songs.py` | `Scripts/` | Adds songs from `song_ids.txt` to the playlist specified in `playlist_id.txt`. |
+| `creat_list.py` | `Scripts/` | Creates a new playlist named "daily" and saves its ID to `playlist_id.txt`. |
+| `del_list.py` | `Scripts/` | Deletes the playlist ID stored in `playlist_id.txt`. |
+| `song_ids.py` | `Scripts/` | Fetches daily recommendation songs and saves their IDs to `song_ids.txt`. |
+| `api.txt` | `Scripts/` | Configuration: Base URL of the NetEase Cloud Music API. |
+| `cookie.txt` | `Scripts/` | Configuration: `MUSIC_U` cookie for authentication. |
+| `playlist_id.txt` | `Scripts/` | State: Stores the currently active playlist ID. |
+| `song_ids.txt` | `Scripts/` | State: Stores the list of song IDs to be added. |
+| `netmusic.html` | `Player/` | The web interface for the player. |
+| `background.js` | `ChromeExtension/` | Service worker for the Chrome extension. |
 
-## ⚙️ Script Logic
+## ⚙️ Script Logic (in `Scripts/`)
 
 ### `add_songs.py`
 - Reads `playlist_id.txt`, `cookie.txt`, `api.txt`, and `song_ids.txt`.
@@ -37,9 +38,9 @@ This document explains the internal logic and file structure of the NetEase Musi
 If the scripts fail, check if your self-hosted API is running and accessible. You can test it by visiting `http://<your-api-url>/status`.
 
 ### Cookie Expiration
-If you get "Login required" errors, your `MUSIC_U` cookie might have expired. Follow the instructions in the README to get a new one and update `cookie.txt`.
+If you get "Login required" errors, your `MUSIC_U` cookie might have expired. Follow the instructions in the README to get a new one and update `Scripts/cookie.txt`.
 
 ### Web Player Not Loading
 - Check the browser console (F12) for errors.
-- Ensure `playlist_id.txt` is being correctly fetched.
-- Verify that `netease-mini-player-v2.js` and `netease-mini-player-v2.css` are in the same directory.
+- Ensure `Scripts/playlist_id.txt` is being correctly fetched.
+- Verify that `netease-mini-player-v2.js` and `netease-mini-player-v2.css` are in the same directory as `netmusic.html` (inside `Player/`).
