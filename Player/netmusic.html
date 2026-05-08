@@ -28,13 +28,13 @@
 <script>
     // --- 加载配置文件并初始化播放器 ---
     Promise.all([
-        fetch('../Scripts/playlist_id.txt').then(r => r.text()),
-        fetch('../Scripts/api.txt').then(r => r.text()),
-        fetch('../Scripts/cookie.txt').then(r => r.text())
+        fetch('playlist_id.txt').then(r => r.text()),
+        fetch('api.txt').then(r => r.text()),
+        fetch('cookie.txt').then(r => r.text())
     ]).then(([playlistId, apiUrl, cookie]) => {
         const playerDiv = document.createElement('div');
         playerDiv.className = 'netease-mini-player';
-        playerDiv.setAttribute('data-playlist-id', playlistId.trim());
+        playerDiv.setAttribute('data-playlist-id', 38516269);
         playerDiv.setAttribute('data-api-url', apiUrl.trim());
         playerDiv.setAttribute('data-cookie', `MUSIC_U=${cookie.trim()}`);
         
@@ -59,22 +59,44 @@
 
     // --- 新增代码：智能控制逻辑 ---
     function enableSmartControl() {
+        const playerEl = document.querySelector('.netease-mini-player');
+        if (!playerEl || !playerEl.neteasePlayer) return;
+
+        const player = playerEl.neteasePlayer;
+        let manuallyPaused = false;
+
+        // 拦截用户手动点击播放/暂停按钮
+        const originalTogglePlay = player.togglePlay.bind(player);
+        player.togglePlay = function() {
+            if (player.isPlaying) {
+                manuallyPaused = true;
+            } else {
+                manuallyPaused = false;
+            }
+            return originalTogglePlay();
+        };
+
+        // 拦截所有 play() 调用（切歌、点歌单等），清除手动暂停标记
+        const originalPlay = player.play.bind(player);
+        player.play = function() {
+            manuallyPaused = false;
+            return originalPlay();
+        };
+
         window.addEventListener('message', (event) => {
             if (event.data && event.data.type === 'NETEASE_PLAYER_CONTROL') {
-                const playerEl = document.querySelector('.netease-mini-player');
-                if (!playerEl || !playerEl.neteasePlayer) return;
-                
-                const player = playerEl.neteasePlayer;
                 const action = event.data.action;
-
                 console.log("📩 收到指令:", action);
 
-                // 逻辑判断核心
                 if (action === 'pause') {
                     player.pause();
                     console.log("⏸️ 已暂停 (避让模式)");
-                } 
+                }
                 else if (action === 'play') {
+                    if (manuallyPaused) {
+                        console.log("🔇 用户手动暂停中，跳过自动恢复");
+                        return;
+                    }
                     player.play();
                     console.log("▶️ 已恢复播放");
                 }
